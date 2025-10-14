@@ -39,7 +39,7 @@ public class PlayerScript : MonoBehaviour
 
         // Verrouiller les rotations X et Z pour ne pas qu'il tombe sur le côté
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        rb.interpolation = RigidbodyInterpolation.Interpolate; // pour un mouvement plus fluide
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     // Update is called once per frame
@@ -50,14 +50,6 @@ public class PlayerScript : MonoBehaviour
 
     private void MoveAndRotate()
     {
-        // Déplacement du joueur sans Rigidbody (ne gère pas les collisions)
-        // Pour Z/S | W/S | Haut/Bas
-        //transform.Translate(Vector3.forward * moveInput.y * moveSpeed * Time.deltaTime);
-
-        // Pour Q/D | Q/D | Gauche/Droite
-        //transform.Rotate(Vector3.up * moveInput.x * rotationSpeed * Time.deltaTime);
-
-
         // Déplacement du joueur avec Rigidbody (gère les collisions)
         // Pour Z/S | W/S | Haut/Bas
         Vector3 move = transform.forward * moveInput.y * moveSpeed * Time.fixedDeltaTime;
