@@ -35,6 +35,15 @@ public partial class @CameraControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ToggleView"",
+                    ""type"": ""Button"",
+                    ""id"": ""b3219085-fdda-4071-9711-0a1dd63ae755"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -48,6 +57,17 @@ public partial class @CameraControls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fcecc8ea-b7ba-4df3-acd2-af4655acb609"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -57,6 +77,7 @@ public partial class @CameraControls: IInputActionCollection2, IDisposable
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
+        m_Camera_ToggleView = m_Camera.FindAction("ToggleView", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -119,11 +140,13 @@ public partial class @CameraControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Camera;
     private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
     private readonly InputAction m_Camera_Look;
+    private readonly InputAction m_Camera_ToggleView;
     public struct CameraActions
     {
         private @CameraControls m_Wrapper;
         public CameraActions(@CameraControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Look => m_Wrapper.m_Camera_Look;
+        public InputAction @ToggleView => m_Wrapper.m_Camera_ToggleView;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -136,6 +159,9 @@ public partial class @CameraControls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @ToggleView.started += instance.OnToggleView;
+            @ToggleView.performed += instance.OnToggleView;
+            @ToggleView.canceled += instance.OnToggleView;
         }
 
         private void UnregisterCallbacks(ICameraActions instance)
@@ -143,6 +169,9 @@ public partial class @CameraControls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @ToggleView.started -= instance.OnToggleView;
+            @ToggleView.performed -= instance.OnToggleView;
+            @ToggleView.canceled -= instance.OnToggleView;
         }
 
         public void RemoveCallbacks(ICameraActions instance)
@@ -163,5 +192,6 @@ public partial class @CameraControls: IInputActionCollection2, IDisposable
     public interface ICameraActions
     {
         void OnLook(InputAction.CallbackContext context);
+        void OnToggleView(InputAction.CallbackContext context);
     }
 }
