@@ -4,66 +4,75 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 2f;
-    [SerializeField] float rotationSpeed = 120f; 
+    [SerializeField] float moveSpeed = 2f;           // Vitesse de déplacement du joueur
+    [SerializeField] float rotationSpeed = 120f;     // Vitesse de rotation du joueur
 
-    private PlayerControls controls;
-    private Vector2 moveInput;
-    private Rigidbody rb;
+    private PlayerControls controls;                  // Référence au système d'input personnalisé
+    private Vector2 moveInput;                        // Stocke l'entrée de déplacement (x = rotation, y = déplacement avant/arrière)
+    private Rigidbody rb;                             // Référence au Rigidbody du joueur
 
+    /// <summary>
+    /// Initialise les contrôles et configure les callbacks d'entrée.
+    /// </summary>
     void Awake()
     {
         controls = new PlayerControls();
 
-        // Quand le joueur bouge
+        // Callback appelé quand le joueur bouge (input maintenu)
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        // Callback appelé quand le joueur arrête de bouger (input relâché)
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
     }
 
+    /// <summary>
+    /// Active les contrôles du joueur.
+    /// </summary>
     void OnEnable()
     {
         controls.Player.Enable();
     }
 
+    /// <summary>
+    /// Désactive les contrôles du joueur.
+    /// </summary>
     void OnDisable()
     {
         controls.Player.Disable();
     }
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Initialisation du Rigidbody et configuration des contraintes physiques.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         if (rb == null)
             Debug.LogError("Le Player doit avoir un Rigidbody !");
 
-        // Verrouiller les rotations X et Z pour ne pas qu'il tombe sur le côté
+        // Empêche le joueur de basculer sur les axes X et Z
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        rb.interpolation = RigidbodyInterpolation.Interpolate; // pour un mouvement plus fluide
+        // Améliore la fluidité des mouvements physiques
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Appelé à chaque frame physique, gère le déplacement et la rotation du joueur.
+    /// </summary>
     void FixedUpdate()
     {
         MoveAndRotate();
     }
 
-    private void MoveAndRotate()
+    /// <summary>
+    /// Déplace et fait tourner le joueur selon les entrées utilisateur.
+    /// </summary>
+        private void MoveAndRotate()
     {
-        // Déplacement du joueur sans Rigidbody (ne gère pas les collisions)
-        // Pour Z/S | W/S | Haut/Bas
-        //transform.Translate(Vector3.forward * moveInput.y * moveSpeed * Time.deltaTime);
-
-        // Pour Q/D | Q/D | Gauche/Droite
-        //transform.Rotate(Vector3.up * moveInput.x * rotationSpeed * Time.deltaTime);
-
-
-        // Déplacement du joueur avec Rigidbody (gère les collisions)
-        // Pour Z/S | W/S | Haut/Bas
+        // Déplacement avant/arrière (axe Y de moveInput)
         Vector3 move = transform.forward * moveInput.y * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + move);
 
-        // Pour Q/D | Q/D | Gauche/Droite
+        // Rotation gauche/droite (axe X de moveInput)
         Quaternion rotation = Quaternion.Euler(0f, moveInput.x * rotationSpeed * Time.fixedDeltaTime, 0f);
         rb.MoveRotation(rb.rotation * rotation);
     }
