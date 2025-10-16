@@ -10,6 +10,7 @@ public class PlayerScript : MonoBehaviour
     private PlayerControls controls;                  // Référence au système d'input personnalisé
     private Vector2 moveInput;                        // Stocke l'entrée de déplacement (x = rotation, y = déplacement avant/arrière)
     private Rigidbody rb;                             // Référence au Rigidbody du joueur
+    Animator animator;
 
     /// <summary>
     /// Initialise les contrôles et configure les callbacks d'entrée.
@@ -17,6 +18,7 @@ public class PlayerScript : MonoBehaviour
     void Awake()
     {
         controls = new PlayerControls();
+        animator = GetComponent<Animator>();
 
         // Callback appelé quand le joueur bouge (input maintenu)
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
@@ -29,7 +31,8 @@ public class PlayerScript : MonoBehaviour
     /// </summary>
     void OnEnable()
     {
-        controls.Player.Enable();
+        if (controls != null)
+            controls.Player.Enable();
     }
 
     /// <summary>
@@ -37,7 +40,8 @@ public class PlayerScript : MonoBehaviour
     /// </summary>
     void OnDisable()
     {
-        controls.Player.Disable();
+        if (controls != null)
+            controls.Player.Disable();
     }
 
     /// <summary>
@@ -68,6 +72,10 @@ public class PlayerScript : MonoBehaviour
     /// </summary>
         private void MoveAndRotate()
     {
+        // Vérifie si le joueur se déplace réellement
+        bool isMoving = moveInput.magnitude > 0.1f;
+        animator.SetBool("Move", isMoving);
+
         // Déplacement avant/arrière (axe Y de moveInput)
         Vector3 move = transform.forward * moveInput.y * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + move);
