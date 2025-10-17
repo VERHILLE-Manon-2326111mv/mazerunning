@@ -32,13 +32,15 @@ public class CameraScript : MonoBehaviour
     // Active les contrôles de la caméra
     private void OnEnable()
     {
-        controls.Camera.Enable();
+        if (controls != null)
+            controls.Camera.Enable();
     }
 
     // Désactive les contrôles de la caméra
     private void OnDisable()
     {
-        controls.Camera.Disable();
+        if (controls != null)
+            controls.Camera.Disable();
     }
 
     /// <summary>
