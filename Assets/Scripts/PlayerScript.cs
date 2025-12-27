@@ -6,6 +6,7 @@ public class PlayerScript : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 2f;           // Vitesse de déplacement du joueur
     [SerializeField] float rotationSpeed = 120f;     // Vitesse de rotation du joueur
+    [SerializeField] Transform playerStartPoint;     // Point de départ du joueur
 
     private PlayerControls controls;                  // Référence au système d'input personnalisé
     private Vector2 moveInput;                        // Stocke l'entrée de déplacement (x = rotation, y = déplacement avant/arrière)
@@ -19,6 +20,7 @@ public class PlayerScript : MonoBehaviour
     {
         controls = new PlayerControls();
         animator = GetComponent<Animator>();
+
 
         // Callback appelé quand le joueur bouge (input maintenu)
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
@@ -57,6 +59,13 @@ public class PlayerScript : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         // Améliore la fluidité des mouvements physiques
         rb.interpolation = RigidbodyInterpolation.Interpolate;
+
+        // Vérifie que le point de départ est assigné
+        if (playerStartPoint == null)
+            Debug.LogWarning("ATTENTION : Le point de départ (playerStartPoint) n'est pas assigné !");
+
+        // Place le joueur au point de départ
+        transform.position = playerStartPoint.position;
     }
 
     /// <summary>
