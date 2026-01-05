@@ -6,17 +6,20 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class CameraScript : MonoBehaviour
 {
-    [SerializeField] private Transform playerBody;        // Référence au Transform du joueur à suivre
-    [SerializeField] private float sensitivity = 100f;    // Sensibilité de la rotation de la caméra
-    [SerializeField] private float clampAngle = 80f;     // Angle maximum de rotation verticale
-    [SerializeField] private float distanceFromPlayer = 3f; // Distance entre la caméra et le joueur
-    [SerializeField] private float height = 1.6f;        // Hauteur de la caméra par rapport au joueur
+    [Header("Référence de l'objet à suivre")]
+    [SerializeField] private Transform body;
 
-    private CameraControls controls;                      // Système de contrôles de la caméra
-    private Vector2 lookInput;                           // Valeur d'entrée de la souris
-    private float xRotation = 0f;                        // Rotation verticale actuelle
-    private float yRotation = 0f;                        // Rotation horizontale actuelle
-    private bool isFirstPerson = false;                  // Indique si la caméra est en vue à la première personne
+    [Header("Paramètres de la caméra")]
+    [SerializeField] private float sensitivity = 100f;      // Sensibilité de la rotation de la caméra
+    [SerializeField] private float clampAngle = 80f;        // Angle maximum de rotation verticale
+    [SerializeField] private float distanceFromObject = 3f; // Distance entre la caméra et l'objet suivi
+    [SerializeField] private float height = 1.6f;           // Hauteur de la caméra par rapport à l'objet suivi
+
+    private CameraControls controls;                        // Système de contrôles de la caméra
+    private Vector2 lookInput;                              // Valeur d'entrée de la souris
+    private float xRotation = 0f;                           // Rotation verticale actuelle
+    private float yRotation = 0f;                           // Rotation horizontale actuelle
+    private bool isFirstPerson = false;                     // Indique si la caméra est en vue à la première personne (pour un joueur)
 
     /// <summary>
     /// Initialise les contrôles de la caméra et configure les callbacks d'entrée.
@@ -48,7 +51,7 @@ public class CameraScript : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        Vector3 offset = transform.position - playerBody.position;
+        Vector3 offset = transform.position - body.position;
         // Calcule les angles de rotation initiaux à partir de la position relative
         yRotation = Mathf.Atan2(offset.x, offset.z) * Mathf.Rad2Deg;
         xRotation = Mathf.Asin(offset.y / offset.magnitude) * Mathf.Rad2Deg;
@@ -59,7 +62,7 @@ public class CameraScript : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
-        if (controls.Camera.ToggleView.triggered) changeView();
+        if (controls.Camera.ToggleView.triggered && body.CompareTag("Player")) changeView();
 
         // Gère la rotation de la caméra uniquement lorsque le bouton gauche de la souris est maintenu
         if (Mouse.current.leftButton.isPressed)
@@ -80,32 +83,32 @@ public class CameraScript : MonoBehaviour
         if (isFirstPerson)
         {
             // En vue première personne, la caméra est directement à la position du joueur
-            transform.position = playerBody.position + Vector3.up * height;
+            transform.position = body.position + Vector3.up * height;
             transform.rotation = rotation;
         }
         else
         {
             // En vue troisième personne, garde le comportement existant
-            Vector3 offset = rotation * new Vector3(0, 0, -distanceFromPlayer);
-            transform.position = playerBody.position + Vector3.up * height + offset;
-            transform.LookAt(playerBody.position + Vector3.up * height);
+            Vector3 offset = rotation * new Vector3(0, 0, -distanceFromObject);
+            transform.position = body.position + Vector3.up * height + offset;
+            transform.LookAt(body.position + Vector3.up * height);
         }
     }
 
     /// <summary>
-    /// Passe de la vue de la première personne à la vue à la troisième personne et vice versa.
+    /// Passe de la vue de la première personne à la vue à la troisième personne et vice versa si la camera est celle du joueur.
     /// </summary>
     private void changeView()
     {
         isFirstPerson = !isFirstPerson;
         if (isFirstPerson)
         {
-            distanceFromPlayer = 0f;
+            distanceFromObject = 0f;
             height = 1f;
         }
         else
         {
-            distanceFromPlayer = 3f;
+            distanceFromObject = 3f;
             height = 1.6f;
         }
     }

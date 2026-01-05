@@ -7,7 +7,8 @@ using UnityEngine;
 /// </summary>
 public class MainMenuManager : MonoBehaviour
 {
-    [SerializeField] private string gameSceneName; // Nom de la scène principale à charger lors du démarrage du jeu
+    [Header("Nom de la scène du jeu principal")]
+    [SerializeField] private string gameSceneName;
 
     /// <summary>
     /// Lance le jeu en chargeant la scène principale.
