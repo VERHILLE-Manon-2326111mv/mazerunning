@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // Ne pas oublier ce using !
+using UnityEngine.UI;
 
 public class UiChest : MonoBehaviour
 {
@@ -7,7 +7,7 @@ public class UiChest : MonoBehaviour
 
     [SerializeField] private GameObject chestPanel;
     [SerializeField] private Image slotImage;
-    [SerializeField] private Button slotButton; // On garde la référence pour le désactiver
+    [SerializeField] private Button slotButton;     
 
     private Chest currentChest;
 
@@ -21,18 +21,23 @@ public class UiChest : MonoBehaviour
     {
         currentChest = chest;
         chestPanel.SetActive(show);
-        if (show)
+        if (show && currentChest != null)
         {
             if (currentChest.IsEmpty())
             {
                 slotImage.enabled = false;
                 slotButton.interactable = false;
             }
-            else
+            else if(currentChest.getHasKey())
             {
                 slotImage.sprite = currentChest.itemSprite;
                 slotImage.enabled = true;
                 slotButton.interactable = true;
+            }
+            else
+            {
+                slotImage.enabled = false;
+                slotButton.interactable = false;
             }
         }
     }

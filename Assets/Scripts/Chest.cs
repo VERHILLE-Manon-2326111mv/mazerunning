@@ -2,11 +2,21 @@ using UnityEngine;
 
 public class Chest : MonoBehaviour
 {
-    [SerializeField] private string itemName = "Key"; 
     [SerializeField] public Sprite itemSprite;   
-    
+
+    private bool hasKey = false;    
     private bool isOpen = false;
     private bool isRecupere = false;
+
+    public void SetHasKey(bool status)
+    {
+            hasKey = status;
+    }
+
+    public bool getHasKey()
+    {
+        return hasKey;
+    }
 
     public void Interact()
     {
@@ -24,8 +34,17 @@ public class Chest : MonoBehaviour
     
     public void RetrieveItem()
     {
+        if (isRecupere) return;
         isRecupere = true;
-        Debug.Log($"Vous avez récupéré : {itemName} !");
+        if (hasKey)
+        {
+            Debug.Log("BRAVO : Vous avez trouvé une clé !");
+            RandomKeyManager.Instance.AddKey();        
+        }
+        else
+        {
+            Debug.Log("Ce coffre est malheuresement vide...");   
+        }
     }
 
     public bool IsEmpty()
