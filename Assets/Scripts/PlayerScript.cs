@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Paramètre des mouvements du joueur")]
     [SerializeField] float moveSpeed = 2f;           // Vitesse de déplacement du joueur
     [SerializeField] float rotationSpeed = 120f;     // Vitesse de rotation du joueur
     [SerializeField] Transform playerStartPoint;     // Point de départ du joueur
@@ -11,7 +13,8 @@ public class PlayerScript : MonoBehaviour
     private PlayerControls controls;                  // Référence au système d'input personnalisé
     private Vector2 moveInput;                        // Stocke l'entrée de déplacement (x = rotation, y = déplacement avant/arrière)
     private Rigidbody rb;                             // Référence au Rigidbody du joueur
-    Animator animator;
+    public bool canMove = true;                       // Indique si le joueur peut se deplacer
+    Animator animator;                                // Reference à l'Animator du joueur
 
     /// <summary>
     /// Initialise les contrôles et configure les callbacks d'entrée.
@@ -73,6 +76,14 @@ public class PlayerScript : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
+        // Si le joueur ne peut pas se deplacer, arrete tout mouvement
+        if (!canMove)
+        {
+            animator.SetBool("Move", false);
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
         MoveAndRotate();
     }
 
@@ -92,5 +103,20 @@ public class PlayerScript : MonoBehaviour
         // Rotation gauche/droite (axe X de moveInput)
         Quaternion rotation = Quaternion.Euler(0f, moveInput.x * rotationSpeed * Time.fixedDeltaTime, 0f);
         rb.MoveRotation(rb.rotation * rotation);
+    }
+
+    /// <summary>
+    /// Empeche ou autorise le déplacement du joueur
+    /// </summary>
+    public void SetCanMove(bool status)
+    {
+        canMove = status;
+
+        if (!status)
+        {
+            moveInput = Vector2.zero;
+            animator.SetBool("Move", false);
+            rb.velocity = Vector3.zero;
+        }
     }
 }
