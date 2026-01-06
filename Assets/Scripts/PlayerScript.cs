@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    [Header("Paramètre des mouvements du joueur")]
-    [SerializeField] float moveSpeed = 2f;           // Vitesse de déplacement du joueur
+    [Header("Paramï¿½tre des mouvements du joueur")]
+    [SerializeField] float moveSpeed = 2f;           // Vitesse de dï¿½placement du joueur
     [SerializeField] float rotationSpeed = 120f;     // Vitesse de rotation du joueur
-    [SerializeField] Transform playerStartPoint;     // Point de départ du joueur
+    [SerializeField] Transform playerStartPoint;     // Point de dï¿½part du joueur
 
-    private PlayerControls controls;                  // Référence au système d'input personnalisé
-    private Vector2 moveInput;                        // Stocke l'entrée de déplacement (x = rotation, y = déplacement avant/arrière)
-    private Rigidbody rb;                             // Référence au Rigidbody du joueur
+    private PlayerControls controls;                  // Rï¿½fï¿½rence au systï¿½me d'input personnalisï¿½
+    private Vector2 moveInput;                        // Stocke l'entrï¿½e de dï¿½placement (x = rotation, y = dï¿½placement avant/arriï¿½re)
+    private Rigidbody rb;                             // Rï¿½fï¿½rence au Rigidbody du joueur
     public bool canMove = true;                       // Indique si le joueur peut se deplacer
-    Animator animator;                                // Reference à l'Animator du joueur
+    Animator animator;                                // Reference ï¿½ l'Animator du joueur
 
     /// <summary>
-    /// Initialise les contrôles et configure les callbacks d'entrée.
+    /// Initialise les contrï¿½les et configure les callbacks d'entrï¿½e.
     /// </summary>
     void Awake()
     {
@@ -25,14 +25,16 @@ public class PlayerScript : MonoBehaviour
         animator = GetComponent<Animator>();
 
 
-        // Callback appelé quand le joueur bouge (input maintenu)
-        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        // Callback appelé quand le joueur arrête de bouger (input relâché)
+        // Callback appelï¿½ quand le joueur bouge (input maintenu)
+        controls.Player.Move.performed += ctx => {
+            moveInput = ctx.ReadValue<Vector2>();
+        };
+        // Callback appelï¿½ quand le joueur arrï¿½te de bouger (input relï¿½chï¿½)
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
     }
 
     /// <summary>
-    /// Active les contrôles du joueur.
+    /// Active les contrï¿½les du joueur.
     /// </summary>
     void OnEnable()
     {
@@ -41,7 +43,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Désactive les contrôles du joueur.
+    /// Dï¿½sactive les contrï¿½les du joueur.
     /// </summary>
     void OnDisable()
     {
@@ -58,21 +60,21 @@ public class PlayerScript : MonoBehaviour
         if (rb == null)
             Debug.LogError("Le Player doit avoir un Rigidbody !");
 
-        // Empêche le joueur de basculer sur les axes X et Z
+        // Empï¿½che le joueur de basculer sur les axes X et Z
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        // Améliore la fluidité des mouvements physiques
+        // Amï¿½liore la fluiditï¿½ des mouvements physiques
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-        // Vérifie que le point de départ est assigné
+        // Vï¿½rifie que le point de dï¿½part est assignï¿½
         if (playerStartPoint == null)
-            Debug.LogWarning("ATTENTION : Le point de départ (playerStartPoint) n'est pas assigné !");
+            Debug.LogWarning("ATTENTION : Le point de dï¿½part (playerStartPoint) n'est pas assignï¿½ !");
 
-        // Place le joueur au point de départ
+        // Place le joueur au point de dï¿½part
         transform.position = playerStartPoint.position;
     }
 
     /// <summary>
-    /// Appelé à chaque frame physique, gère le déplacement et la rotation du joueur.
+    /// Appelï¿½ ï¿½ chaque frame physique, gï¿½re le dï¿½placement et la rotation du joueur.
     /// </summary>
     void FixedUpdate()
     {
@@ -88,15 +90,15 @@ public class PlayerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Déplace et fait tourner le joueur selon les entrées utilisateur.
+    /// Dï¿½place et fait tourner le joueur selon les entrï¿½es utilisateur.
     /// </summary>
         private void MoveAndRotate()
     {
-        // Vérifie si le joueur se déplace réellement
+        // Vï¿½rifie si le joueur se dï¿½place rï¿½ellement
         bool isMoving = moveInput.magnitude > 0.1f;
         animator.SetBool("Move", isMoving);
 
-        // Déplacement avant/arrière (axe Y de moveInput)
+        // Dï¿½placement avant/arriï¿½re (axe Y de moveInput)
         Vector3 move = transform.forward * moveInput.y * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + move);
 
@@ -106,7 +108,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Empeche ou autorise le déplacement du joueur
+    /// Empeche ou autorise le dï¿½placement du joueur
     /// </summary>
     public void SetCanMove(bool status)
     {
