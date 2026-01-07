@@ -839,7 +839,6 @@ MonoBehaviour:
   clampAngle: 90
   distanceFromObject: 3
   height: 1.6
-  autoRotateSpeed: 150
 --- !u!1 &18276005
 GameObject:
   m_ObjectHideFlags: 0
@@ -61876,7 +61875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rotationSpeed: 120
+  rotationSpeed: 200
   playerStartPoint: {fileID: 1215532050}
   canMove: 1
 --- !u!54 &1725831662
@@ -61957,7 +61956,6 @@ MonoBehaviour:
   portal: {fileID: 8727684043630624113, guid: df546b133cc714043a3254f18fff6c82, type: 3}
   teleportDelay: 0
   teleportEffect: {fileID: 2013549545}
-  cameraScript: {fileID: 16038081}
 --- !u!1 &1727167793
 GameObject:
   m_ObjectHideFlags: 0
@@ -67613,7 +67611,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2602231374797837620, guid: 855c90c429434444fbe3ca2b5507ab04, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
