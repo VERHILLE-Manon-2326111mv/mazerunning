@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,9 @@ public class RandomKeyManager : MonoBehaviour
     [Header("Configuration")]
     [SerializeField] private DoorControls door;
     [SerializeField] private int keysRequired = 3;
+
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI keyNumberText;
 
     private int keysCollected = 0;
     private List<Chest> allChests = new List<Chest>();
@@ -32,6 +36,7 @@ public class RandomKeyManager : MonoBehaviour
         {
             Debug.Log("CHEAT ACTIVÉ");
             keysCollected = keysRequired;
+            keyNumberText.text = keysCollected + " / 3";
             CheckWin();
         }
     }
@@ -55,6 +60,17 @@ public class RandomKeyManager : MonoBehaviour
         keysCollected++;
         Debug.Log($" Clé trouvée ! ({keysCollected}/{keysRequired})");
         CheckWin();
+    }
+
+    /// <summary>
+    // Met à jour le texte à l'écran
+    /// </summary>
+    private void UpdateKeyUI()
+    {
+        if (keyNumberText != null)
+        {
+            keyNumberText.text = keysCollected + " / 3";
+        }
     }
 
     private void CheckWin()
