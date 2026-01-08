@@ -289,7 +289,8 @@ MonoBehaviour:
   m_text: "Parcours le labyrinthe \xE0 la recherche des trois cl\xE9s pour sortir
     !\n\nCommandes :\nZQSD \u2192 Se d\xE9placer\nTAB \u2192 changer de point de
     vue\nE \u2192 Ouvrir un coffre / int\xE9ragir avec un poste d'observation\nP
-    \u2192 Poser un portail/Se t\xE9l\xE9porter"
+    \u2192 Poser un portail / Se t\xE9l\xE9porter\nI \u2192 Changer la disposition
+    des murs"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -316,7 +317,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.9
+  m_fontSize: 21.8
   m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 1
